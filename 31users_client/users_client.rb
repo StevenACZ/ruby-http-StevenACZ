@@ -3,12 +3,47 @@ require "json"
 
 class UsersClient
   include HTTParty
-  # complete this class
-end
+  base_uri "https://jsonplaceholder.typicode.com"
 
-# pp UsersClient.users
-# pp UsersClient.show_user(1)
-# user_data = { name: "John Doe", username: "jhonny2000" }
-# pp UsersClient.create_user(user_data)
-# pp UsersClient.update_user(1, user_data)
-# pp UsersClient.delete_user(1)
+  def self.users
+    response = get("/users")
+    body = JSON.parse(response.body, symbolize_names: true)
+    { code: response.code, message: response.message, body: body }
+  end
+
+  def self.show_user(id)
+    response = get("/users/#{id}")
+    body = JSON.parse(response.body, symbolize_names: true)
+    { code: response.code, message: response.message, body: body }
+  end
+
+  def self.create_user(name: "", username: "", email: "")
+    options = {
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: {name: name, username: username, email: email}.to_json
+    }
+    response = post("/users", options)
+    body = JSON.parse(response.body, symbolize_names: true)
+    { code: response.code, message: response.message, body: body }
+  end
+
+  def self.update_user(id, user_data)
+    options = {
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: {name: user_data[:name], username: user_data[:username]}.to_json
+    }
+    response = patch("/users/#{id}", options)
+    body = JSON.parse(response.body, symbolize_names: true)
+    { code: response.code, message: response.message, body: body }
+  end
+
+  def self.delete_user(id)
+    response = delete("/users/#{id}")
+    body = JSON.parse(response.body, symbolize_names: true)
+    { code: response.code, message: response.message, body: body }
+  end
+end
