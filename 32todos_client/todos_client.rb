@@ -3,11 +3,31 @@ require "json"
 
 class TodosClient
   include HTTParty
-  # complete this class
-end
+  base_uri "https://jsonplaceholder.typicode.com"
 
-# my_todos = TodosClient.new(1)
-# pp my_todos.todos
-# new_todo = { title: "New todo", completed: false }
-# pp my_todos.show_todo(100)
-# pp my_todos.create_todo(new_todo)
+  def initialize(user_id)
+    @user_id = user_id
+  end
+
+  def todos
+    response = self.class.get("/users/#{@user_id}/todos")
+    body = JSON.parse(response.body, symbolize_names: true)
+  end
+
+  def create_todo(todo_data)
+    options = {
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: { title: todo_data[:title], completed: todo_data[:completed] }.to_json
+    }
+    response = self.class.post("/users/#{@user_id}/todos", options)
+    body = JSON.parse(response.body, symbolize_names: true)
+  end
+
+  def show_todo(id)
+    response = self.class.get("/users/#{@user_id}/todos/#{id}")
+    body = JSON.parse(response.body, symbolize_names: true)
+  end
+
+end
