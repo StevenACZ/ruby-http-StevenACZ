@@ -22,7 +22,7 @@ class UsersClient
       headers: {
         "Content-Type": "application/json"
       },
-      body: {name: name, username: username, email: email}.to_json
+      body: { name: name, username: username, email: email }.to_json
     }
     response = post("/users", options)
     body = JSON.parse(response.body, symbolize_names: true)
@@ -34,7 +34,7 @@ class UsersClient
       headers: {
         "Content-Type": "application/json"
       },
-      body: {name: user_data[:name], username: user_data[:username]}.to_json
+      body: { name: user_data[:name], username: user_data[:username] }.to_json
     }
     response = patch("/users/#{id}", options)
     body = JSON.parse(response.body, symbolize_names: true)
